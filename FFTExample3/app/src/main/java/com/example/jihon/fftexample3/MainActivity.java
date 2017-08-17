@@ -207,6 +207,7 @@ package com.example.jihon.fftexample3;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -216,12 +217,13 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.view.View.OnClickListener;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -253,11 +255,21 @@ public class MainActivity extends Activity implements OnClickListener {
     Canvas canvas;
     Paint paint;
 
+    int maxI=0;
+    int count1=0;
+    int count2=0;
+    int count3=0;
+//    int index=0;
+//    String[] sound = {"경보음1", "경보음2", "없음"};
+
+    Vibrator vibrator;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         startStopButton = (Button) findViewById(R.id.StartStopButton);
         startStopButton.setOnClickListener(this);
 // RealDoubleFFT 클래스 컨스트럭터는 한번에 처리할 샘플들의 수를 받는다. 그리고 출력될 주파수 범위들의 수를
@@ -272,7 +284,6 @@ public class MainActivity extends Activity implements OnClickListener {
         paint.setColor(Color.GREEN);
         imageView.setImageBitmap(bitmap);
     }
-
     // 이 액티비티의 작업들은 대부분 RecordAudio라는 클래스에서 진행된다. 이 클래스는 AsyncTask를 확장한다.
     // AsyncTask를 사용하면 사용자 인터페이스를 멍하니 있게 하는 메소드들을 별도의 스레드로 실행한다.
     // doInBackground 메소드에 둘 수 있는 것이면 뭐든지 이런 식으로 실행할 수 있다.
@@ -284,7 +295,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 int bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
 
                 AudioRecord audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, frequency,
-                        channelConfiguration, audioEncoding, bufferSize);
+                                                            channelConfiguration, audioEncoding, bufferSize);
 
 // short로 이뤄진 배열인 buffer는 원시 PCM 샘플을 AudioRecord 객체에서 받는다.
 // double로 이뤄진 배열인 toTransform은 같은 데이터를 담지만 double 타입인데, FFT
@@ -292,11 +303,56 @@ public class MainActivity extends Activity implements OnClickListener {
                 short[] buffer = new short[blockSize]; //blockSize = 256
                 double[] toTransform = new double[blockSize]; //blockSize = 256
 
+
+
                 audioRecord.startRecording();
 
                 while (started) {
                     int bufferReadResult = audioRecord.read(buffer, 0, blockSize); //blockSize = 256
-                    Log.i("bufferReadResult", Integer.toString(bufferReadResult));
+                    int flag1=0, flag2=0;
+                    Double max=toTransform[0];
+
+                    for(int i=1; i<=255; i++){
+                        if(max<toTransform[i]){
+                            maxI=i;
+                            max=toTransform[i];
+                        }
+                    }
+
+                        if(maxI>=160&&maxI<=170) {
+                            count1++;
+                        }else if(maxI>=200&&maxI<=210){
+                            count2++;
+                        }else{
+                            count3++;
+                        }
+
+                        if(count1>10){
+                            count1=0;
+                            Log.i("경적종류", "경적1");
+                            if(flag1==0){
+                                vibrator.vibrate(1500);
+                                flag1=1;
+                            }
+                        }
+
+                        if(count2>10){
+                            count2=0;
+                            Log.i("경적종류", "경적2");
+                            if(flag2==0){
+                                vibrator.vibrate(1500);
+                                flag2=1;
+                            }
+                        }
+
+                        if(count3>10){
+                            count3=0;
+                            Log.i("경적종류", "없음");
+                        }
+
+
+//                    Log.i("bufferReadResult", Integer.toString(bufferReadResult));
+
 // AudioRecord 객체에서 데이터를 읽은 다음에는 short 타입의 변수들을 double 타입으로
 // 바꾸는 루프를 처리한다.
 // 직접 타입 변환(casting)으로 이 작업을 처리할 수 없다. 값들이 전체 범위가 아니라 -1.0에서
@@ -322,7 +378,7 @@ public class MainActivity extends Activity implements OnClickListener {
 // 해당하는 오디오 레벨을 의미한다.
 
                     transformer.ft(toTransform);
-                    Log.i("DEBUG", toTransform.toString());
+//                    Log.i("DEBUG", toTransform.toString());
 // publishProgress를 호출하면 onProgressUpdate가 호출된다.
                     publishProgress(toTransform);
                 }
