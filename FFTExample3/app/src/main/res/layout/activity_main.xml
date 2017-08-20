@@ -9,15 +9,19 @@
 
     <TextView
 
-        android:id="@+id/textView2"
+        android:id="@+id/tv"
 
-        android:layout_width="0dp"
+        android:layout_width="368dp"
 
-        android:layout_height="wrap_content"
+        android:layout_height="105dp"
 
         android:text="Hello!"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/fileNameText" />
 
     <ImageView
 
@@ -25,7 +29,7 @@
 
         android:layout_width="382dp"
 
-        android:layout_height="299dp"
+        android:layout_height="120dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -33,7 +37,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="106dp" />
+        android:layout_marginTop="69dp" />
 
     <Button
 
@@ -63,9 +67,9 @@
 
     <EditText
         android:id="@+id/fileNameText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="15dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -74,7 +78,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:text="파일이름을 입력하세요" />
+        tools:text="저장 또는 불러올 파일이름을 입력하세요" />
 
     <Button
         android:id="@+id/load"

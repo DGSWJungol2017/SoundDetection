@@ -22,7 +22,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -32,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import ca.uol.aig.fftpack.RealDoubleFFT;
 
@@ -72,6 +75,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
     Vibrator vibrator;
     Button record;
+    EditText fileNameText;
+    TextView tv;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,9 @@ public class MainActivity extends Activity implements OnClickListener {
         imageView.setImageBitmap(bitmap);
 
         record = (Button)findViewById(R.id.record);
+        fileNameText = (EditText)findViewById(R.id.fileNameText);
+        tv = (TextView)findViewById(R.id.tv);
+
     }
 
     Boolean isRecording = false;
@@ -114,11 +122,11 @@ public class MainActivity extends Activity implements OnClickListener {
     public void saveBtn(View view) {
 
         String dirPath = getFilesDir().getAbsolutePath();
-        String fileName;
+        String fileName = fileNameText.getText().toString();
         try{
-            FileOutputStream fos = openFileOutput("myfile.txt", Context.MODE_APPEND);// 저장모드
+            FileOutputStream fos = openFileOutput(fileName + ".txt", Context.MODE_APPEND);// 저장모드
             PrintWriter out = new PrintWriter(fos);
-            out.println(recordResult);
+            out.println(recordResult.toString());
             out.close();
             Toast.makeText(this, "저장성공", Toast.LENGTH_SHORT).show();
             Log.i("dirpath", dirPath);
@@ -131,22 +139,27 @@ public class MainActivity extends Activity implements OnClickListener {
     public void load(View view){
         try {
             // 파일에서 읽은 데이터를 저장하기 위해서 만든 변수
-
             String dirPath = getFilesDir().getAbsolutePath();
             File file = new File(dirPath);
             File[] list = file.listFiles();
             Log.i("Name", list[0].getName());
+
+            String fileName = fileNameText.getText().toString();
             StringBuffer data = new StringBuffer();
-            FileInputStream fis = openFileInput("myfile.txt");//파일명
+            FileInputStream fis = openFileInput(fileName+".txt");//파일명
             BufferedReader buffer = new BufferedReader(new InputStreamReader(fis));
             String str = buffer.readLine(); // 파일에서 한줄을 읽어옴
             while (str != null) {
                 data.append(str + "\n");
                 str = buffer.readLine();
             }
+//            data
+            tv.setText(data.toString());
             buffer.close();
+            Toast.makeText(this, "불러오기 성공", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(this, "불러오기 실패", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -232,8 +245,8 @@ public class MainActivity extends Activity implements OnClickListener {
                     }
 
                     if(isRecording){
-                        recordResult.append(toTransform.toString());
-                        Log.i("체크", toTransform[0]+"");
+                        recordResult.append(Arrays.toString(toTransform));
+//                        Log.i("체크", Arrays.toString(toTransform));
                     }
 
 // 이제 double값들의 배열을 FFT 객체로 넘겨준다. FFT 객체는 이 배열을 재사용하여 출력 값을
