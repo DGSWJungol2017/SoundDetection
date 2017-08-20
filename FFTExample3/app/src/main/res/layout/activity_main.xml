@@ -33,7 +33,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="77dp" />
+        android:layout_marginTop="106dp" />
 
     <Button
 
@@ -46,5 +46,61 @@
         android:text="Start"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
+
+    <Button
+        android:onClick="saveBtn"
+        android:id="@+id/save"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:text="저장"
+        tools:layout_editor_absoluteY="0dp"
+        app:layout_constraintLeft_toRightOf="@+id/record"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp" />
+
+    <EditText
+        android:id="@+id/fileNameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="파일이름을 입력하세요" />
+
+    <Button
+        android:id="@+id/load"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="8dp"
+        android:onClick="load"
+        android:text="불러오기"
+        app:layout_constraintLeft_toRightOf="@+id/save"
+        tools:layout_editor_absoluteY="0dp"
+        android:layout_marginStart="8dp" />
+
+    <Button
+        android:id="@+id/record"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="8dp"
+
+        android:onClick="record"
+        android:text="녹음시작"
+        app:layout_constraintLeft_toRightOf="@+id/StartStopButton"
+        tools:layout_editor_absoluteY="0dp"
+        android:layout_marginStart="8dp" />
 
 </android.support.constraint.ConstraintLayout>
